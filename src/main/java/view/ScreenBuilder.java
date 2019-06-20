@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -103,11 +104,29 @@ public class ScreenBuilder {
 		send.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				 String email = text1.getText();
+				 String subject = text2.getText();
+				 String text = textarea.getText();
+				 
 				  
-				  if (ScreenValidator.isValid(email)) {
+				 if (ScreenValidator.noEmail(email)) {
+					 JOptionPane.showMessageDialog(send,"Please specify at least one recipient."); 
+				 }
+				 
+				 else if (ScreenValidator.isValid(email)) {
 					  
-				  }else {
-					  JOptionPane.showMessageDialog(send,"You have entered an Invalid email."); 
+				  }
+				 else if (ScreenValidator.noSubject(subject) || ScreenValidator.noText(text)) {
+					 
+					 JOptionPane optionPane = new JOptionPane("Send this message without a subject or text in the body?",JOptionPane.WARNING_MESSAGE);
+					 JDialog dialog = optionPane.createDialog("Email");
+					 optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
+					 dialog.setAlwaysOnTop(true); 
+					 dialog.setVisible(true);
+					 
+				 }
+				
+				 else {
+					  JOptionPane.showMessageDialog(send,"You have entered an Invalid email.","Alert",JOptionPane.WARNING_MESSAGE); 
 				  }
 			  } 
 		} );

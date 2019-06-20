@@ -14,7 +14,7 @@ public class InitProcess {
 //	  SwingUtilities.invokeLater(new Runnable() {
 //          @Override
 //          public void run() {
-//              SendEmailClient client = new SendEmailClient();
+//              MailSender client = new MailSender();
 //              client.setVisible(true);
 //          }
 //      });

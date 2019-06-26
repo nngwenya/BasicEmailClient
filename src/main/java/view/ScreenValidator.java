@@ -21,22 +21,21 @@ public class ScreenValidator {
 	 
 	 public static boolean noEmail(String email) {
 		 
-		 if (email.isEmpty()) 
+		 if (email == null || email.isEmpty())
 			 return true;
-		 
 		 return false;
 	 }
 	 
 	 public static boolean noSubject(String subject) {
 		 
-		 if (subject.isEmpty()) 
+		 if (subject == null || subject.isEmpty())
 			 return true;
 		 return false;
 	 }
 	 
 	 public static boolean noText(String text) {
 		 
-		 if (text.isEmpty()) 
+		 if (text == null || text.isEmpty())
 			 return true;
 		 return false;
 	 }

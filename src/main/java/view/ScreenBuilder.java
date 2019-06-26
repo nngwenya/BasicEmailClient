@@ -1,136 +1,147 @@
 package view;
 
+import controller.InitProcess;
+import services.BasicMail;
+import services.MailSender;
+import services.PropertyFetcher;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class ScreenBuilder {
-	 static JFrame f; 
-	 static JButton create, send, Clear, Close;
-	 static JLabel label1, label2, label3;
-	 static JTextField text1, text2;
-	 static JTextArea textarea;
-	 
-	public static void close(){
-	     f.setVisible(false);
-	     f.dispose();
+	private JFrame frame;
+	private JPanel panel;
+	private JButton btnSend, btnClear;
+	private JLabel labelTo, labelCC, labelBCC, labelSubject;
+	private JTextField txtTo, txtCC, txtBCC, txtSubject;
+	private JTextArea txtEmailBody;
+
+	private InitProcess controller;
+	private MailSender sender;
+	private PropertyFetcher fetcher;
+
+	private  void initEmailView()
+	{
+		frame = new JFrame("Basic Email Client");
+		panel = new JPanel();
+		btnSend = new JButton("Send");
+		btnClear = new JButton("Clear");
+		labelTo = new JLabel("Recipient(s): ");
+		labelBCC = new JLabel("Bcc: ");
+		labelCC = new JLabel("CC: ");
+		labelSubject = new JLabel("Subject: ");
+		txtTo = new JTextField();
+		txtBCC = new JTextField();
+		txtCC = new JTextField();
+		txtSubject = new JTextField();
+		txtEmailBody = new JTextArea();
+		setBounds();
+		setListeners();
+		addToPanel();
 	}
-	
-	public void indexPage() {
-		
-		f = new JFrame("Basic Email Client");
-		create =new JButton("Create Email");
-		
-		create.setBounds(700,500,600,50);  
-		f.add(create);
-		
-		
-		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//f.setSize(400,400);  
-		f.setLayout(null);  
-		f.setVisible(true);
-		
-		create.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  close();
-				  creatEmail();
-			  } 
-		} );
+
+	private  void setBounds()
+	{
+		frame.setBackground(Color.gray);
+		labelTo.setBounds(40,40,100,20);
+		txtTo.setBounds(150, 40,710,20);
+		labelCC.setBounds(40, 70, 100, 20);
+		txtCC.setBounds(150, 70, 710,20);
+		labelBCC.setBounds(40,100, 100,20);
+		txtBCC.setBounds(150, 100,710,20);
+		labelSubject.setBounds(40,130,100,20);
+		txtSubject.setBounds(150,130,710,20);
+		txtEmailBody.setBounds(40,160,820,460);
+		btnSend.setBounds(40,640, 80,20);
+		btnSend.setBackground(Color.cyan);
+		btnClear.setBounds(140, 640, 80,20);
+		btnClear.setBackground(Color.cyan);
 	}
-	
-	public void creatEmail() {
-		
-		f = new JFrame("Compose email");
-		
-		text1 = new JTextField();
-		text2 = new JTextField();
-		
-		label1 = new JLabel("To :");
-		label2 = new JLabel("Subject :");
-		label3 = new JLabel("Compose email");
-	
-		
-		textarea = new JTextArea();
-		
-		send =new JButton("Send");
-		Clear=new JButton("Clear");
-		Close =new JButton("Close");
-		
-		text1.setBounds(600,60,900,40);
-		text2.setBounds(600,130,900,40);
-		label1.setBounds(520,60,600,50);
-		label2.setBounds(520,130,600,50);
-		textarea.setBounds(600,200,900,600);
-		send.setBounds(600,800,100,40);
-		Clear.setBounds(700,800,100,40);
-		Close.setBounds(1400,800,100,40);
-		
-		
-		f.add(text1);
-		f.add(text2);
-		f.add(label1);
-		f.add(label2);
-		f.add(textarea);
-		f.add(send);
-		f.add(Clear);
-		f.add(Close);
-		
-		
-		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-		f.setLayout(null);  
-		f.setVisible(true);
-		
-		Close.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  close();
-			  } 
-		} );
-		
-		Clear.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  textarea.setText("");
-			  } 
-		} );
-		
-		send.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				 String email = text1.getText();
-				 String subject = text2.getText();
-				 String text = textarea.getText();
-				 
-				  
-				 if (ScreenValidator.noEmail(email)) {
-					 JOptionPane.showMessageDialog(send,"Please specify at least one recipient."); 
-				 }
-				 
-				 else if (ScreenValidator.isValid(email)) {
-					  
-				  }
-				 else if (ScreenValidator.noSubject(subject) || ScreenValidator.noText(text)) {
-					 
-					 JOptionPane optionPane = new JOptionPane("Send this message without a subject or text in the body?",JOptionPane.WARNING_MESSAGE);
-					 JDialog dialog = optionPane.createDialog("Email");
-					 optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
-					 dialog.setAlwaysOnTop(true); 
-					 dialog.setVisible(true);
-					 
-				 }
+
+	private  void setListeners()
+	{
+		btnSend.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				BasicMail basicMail = controller.createBasicMail(txtTo.getText(), txtCC.getText(), txtBCC.getText(), txtEmailBody.getText());
 				
+				if (ScreenValidator.noEmail(txtTo.getText())) {
+					 JOptionPane.showMessageDialog(btnSend,"Please specify at least one recipient.");
+			 }
+				 else if (ScreenValidator.noSubject(txtSubject.getText()) || ScreenValidator.noText(txtEmailBody.getText())) {
+					 
+					 	JOptionPane optionPane = new JOptionPane("Send this message without a subject or text in the body?",JOptionPane.WARNING_MESSAGE);
+					 	JDialog dialog = optionPane.createDialog("Email");
+					 	optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
+					 	dialog.setAlwaysOnTop(true);
+					 	dialog.setVisible(true);
+					 
+				 }
+				 else if (ScreenValidator.isValid(txtTo.getText())) {
+					
+				}
 				 else {
-					  JOptionPane.showMessageDialog(send,"You have entered an Invalid email.","Alert",JOptionPane.WARNING_MESSAGE); 
+					  JOptionPane.showMessageDialog(btnSend,"You have entered an Invalid email.","Alert",JOptionPane.WARNING_MESSAGE);
 				  }
-			  } 
-		} );
-		
+				 sender.sendMail(basicMail, fetcher);
+			}
+		});
+
+		btnClear.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				txtTo.setText("");
+				txtCC.setText("");
+				txtBCC.setText("");
+				txtSubject.setText("");
+				txtEmailBody.setText("");
+			}
+		});
 	}
+
+	private  void addToPanel()
+	{
+		panel.add(labelTo);
+		panel.add(txtTo);
+		panel.add(labelCC);
+		panel.add(txtCC);
+		panel.add(labelBCC);
+		panel.add(txtBCC);
+		panel.add(labelSubject);
+		panel.add(txtSubject);
+		panel.add(txtEmailBody);
+		panel.add(btnSend);
+		panel.add(btnClear);
+	}
+
+
+	public  void displayEmailView(MailSender sender, PropertyFetcher fetcher, InitProcess controller)
+	{
+		initEmailView();
+		this.controller = controller;
+		this.sender = sender;
+		this.fetcher = fetcher;
+		frame.setContentPane(panel);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setPreferredSize(new Dimension(900, 700));
+		frame.setResizable(false);
+		frame.setLayout(null);
+		frame.pack();
+		frame.setVisible(true);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		//this tries to make the screen pops up in the centre
+		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
+	}
+
+
 
 }

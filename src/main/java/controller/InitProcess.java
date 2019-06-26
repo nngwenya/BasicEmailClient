@@ -1,5 +1,8 @@
 package controller;
 
+import services.BasicMail;
+import services.MailSender;
+import services.PropertyFetcher;
 import view.ScreenBuilder;
 
 public class InitProcess {
@@ -7,16 +10,14 @@ public class InitProcess {
 	public static void main(String[] args) {  
 		
 		ScreenBuilder screen = new ScreenBuilder();
-		
-		screen.indexPage();
+		MailSender mailSender = new MailSender();
+		PropertyFetcher fetcher = new PropertyFetcher();
+		screen.displayEmailView(mailSender, fetcher, new InitProcess());
 	}
-	
-//	  SwingUtilities.invokeLater(new Runnable() {
-//          @Override
-//          public void run() {
-//              MailSender client = new MailSender();
-//              client.setVisible(true);
-//          }
-//      });
 
+	public BasicMail createBasicMail(String recipients, String cc, String bcc, String body)
+	{
+		//validations and return mailModel;
+		return null;
+	}
 }

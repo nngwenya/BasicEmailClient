@@ -9,7 +9,6 @@ public class BasicMail {
     List<String> bcc;
     String subject;
     String body;
-    String email;
 
     public List<String> getRecipients() {
         return recipients;
@@ -51,11 +50,4 @@ public class BasicMail {
         this.body = body;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

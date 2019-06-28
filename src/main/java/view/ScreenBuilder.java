@@ -4,6 +4,7 @@ import controller.InitProcess;
 import services.BasicMail;
 import services.MailSender;
 import services.PropertyFetcher;
+import services.ScreenValidator;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ public class ScreenBuilder {
 	private InitProcess controller;
 	private MailSender sender;
 	private PropertyFetcher fetcher;
+	private ScreenValidator validator;
 
 	private  void initEmailView()
 	{
@@ -45,7 +47,6 @@ public class ScreenBuilder {
 
 	private  void setBounds()
 	{
-		frame.setBackground(Color.gray);
 		labelTo.setBounds(40,40,100,20);
 		txtTo.setBounds(150, 40,710,20);
 		labelCC.setBounds(40, 70, 100, 20);
@@ -56,9 +57,7 @@ public class ScreenBuilder {
 		txtSubject.setBounds(150,130,710,20);
 		txtEmailBody.setBounds(40,160,820,460);
 		btnSend.setBounds(40,640, 80,20);
-		btnSend.setBackground(Color.cyan);
 		btnClear.setBounds(140, 640, 80,20);
-		btnClear.setBackground(Color.cyan);
 	}
 
 	private  void setListeners()
@@ -68,27 +67,16 @@ public class ScreenBuilder {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				BasicMail basicMail = controller.createBasicMail(txtTo.getText(), txtCC.getText(), txtBCC.getText(), txtEmailBody.getText());
-				
-				if (ScreenValidator.noEmail(txtTo.getText())) {
-					 JOptionPane.showMessageDialog(btnSend,"Please specify at least one recipient.");
-			 }
-				 else if (ScreenValidator.noSubject(txtSubject.getText()) || ScreenValidator.noText(txtEmailBody.getText())) {
-					 
-					 	JOptionPane optionPane = new JOptionPane("Send this message without a subject or text in the body?",JOptionPane.WARNING_MESSAGE);
-					 	JDialog dialog = optionPane.createDialog("Email");
-					 	optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
-					 	dialog.setAlwaysOnTop(true);
-					 	dialog.setVisible(true);
-					 
-				 }
-				 else if (ScreenValidator.isValid(txtTo.getText())) {
-					
+				if (validator.invalidAddresses(txtTo.getText(), txtCC.getText(), txtBCC.getText())) {
+					warningPopup(validator.getErrorHeading(), validator.getErrorMessage(), "error"); //passing string literal here this is bad practice but... meh. Enum? maybe
+					return;
 				}
-				 else {
-					  JOptionPane.showMessageDialog(btnSend,"You have entered an Invalid email.","Alert",JOptionPane.WARNING_MESSAGE);
-				  }
-				 sender.sendMail(basicMail, fetcher);
+				if (validator.isSubjectOrBodyEmpty(txtSubject.getText(), txtEmailBody.getText())) {
+					warningPopup(validator.getWarningHeading(), validator.getWarningMessage(), "warning");
+				}
+				BasicMail basicMail = controller.createBasicMail(txtTo.getText(), txtCC.getText(), txtBCC.getText(),
+																txtSubject.getText(), txtEmailBody.getText());
+				sender.sendMail(basicMail, fetcher);
 			}
 		});
 
@@ -121,13 +109,27 @@ public class ScreenBuilder {
 		panel.add(btnClear);
 	}
 
+	private void warningPopup(String header, String message, String type)
+	{
+		 if(type.equalsIgnoreCase("error")) {
+			 JOptionPane.showMessageDialog(btnSend, message, header, JOptionPane.WARNING_MESSAGE);
+			 return;
+		 }
+		 JOptionPane optionPane = new JOptionPane(message,JOptionPane.WARNING_MESSAGE);
+		 JDialog dialog = optionPane.createDialog(header);
+		 optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
+		 dialog.setAlwaysOnTop(true);
+		 dialog.setVisible(true);
+	}
 
-	public  void displayEmailView(MailSender sender, PropertyFetcher fetcher, InitProcess controller)
+
+	public  void displayEmailView(MailSender sender, PropertyFetcher fetcher, ScreenValidator validator, InitProcess controller)
 	{
 		initEmailView();
 		this.controller = controller;
 		this.sender = sender;
 		this.fetcher = fetcher;
+		this.validator = validator;
 		frame.setContentPane(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
@@ -141,7 +143,4 @@ public class ScreenBuilder {
 		//this tries to make the screen pops up in the centre
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 	}
-
-
-
 }

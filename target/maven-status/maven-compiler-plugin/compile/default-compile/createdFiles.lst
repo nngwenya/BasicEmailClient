@@ -1,8 +1,8 @@
-view\ScreenBuilder$2.class
-services\PropertyFetcher.class
-view\ScreenBuilder$1.class
-view\ScreenValidator.class
-controller\InitProcess.class
-view\ScreenBuilder.class
-services\BasicMail.class
-services\MailSender.class
+view/ScreenBuilder$2.class
+services/PropertyFetcher.class
+view/ScreenBuilder$1.class
+view/ScreenBuilder.class
+services/BasicMail.class
+services/ScreenValidator.class
+services/MailSender.class
+controller/InitProcess.class

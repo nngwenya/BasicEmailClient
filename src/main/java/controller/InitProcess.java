@@ -4,6 +4,9 @@ import services.BasicMail;
 import services.MailSender;
 import services.PropertyFetcher;
 import view.ScreenBuilder;
+import services.ScreenValidator;
+
+import java.util.Arrays;
 
 public class InitProcess {
 	
@@ -12,12 +15,20 @@ public class InitProcess {
 		ScreenBuilder screen = new ScreenBuilder();
 		MailSender mailSender = new MailSender();
 		PropertyFetcher fetcher = new PropertyFetcher();
-		screen.displayEmailView(mailSender, fetcher, new InitProcess());
+		ScreenValidator validator = new ScreenValidator();
+		InitProcess controller = new InitProcess();
+		screen.displayEmailView(mailSender, fetcher, validator, controller );
 	}
 
-	public BasicMail createBasicMail(String recipients, String cc, String bcc, String body)
+	public BasicMail createBasicMail(String recipients, String cc, String bcc, String subject, String body)
 	{
-		//validations and return mailModel;
-		return null;
+		//just maps the strings into BasicMail object
+		BasicMail basicMail = new BasicMail();
+		basicMail.setRecipients(Arrays.asList(recipients.trim().split(";")));
+		basicMail.setCc(Arrays.asList(cc.trim().split(";")));
+		basicMail.setBcc(Arrays.asList(bcc.trim().split(";")));
+		basicMail.setSubject(subject);
+		basicMail.setBody(body);
+		return basicMail;
 	}
 }

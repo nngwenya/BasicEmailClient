@@ -1,6 +1,6 @@
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\controller\InitProcess.java
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\services\MailSender.java
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\view\ScreenValidator.java
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\services\BasicMail.java
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\services\PropertyFetcher.java
-C:\Users\Nomvula\Downloads\BasicEmailClient\BasicEmailClient-master\src\main\java\view\ScreenBuilder.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/services/PropertyFetcher.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/services/ScreenValidator.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/services/BasicMail.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/services/MailSender.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/view/ScreenBuilder.java
+/goinfre/lmkwanaz/Desktop/Gwen/src/main/java/controller/InitProcess.java
